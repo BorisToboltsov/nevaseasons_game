@@ -5,8 +5,8 @@ from database.base.model.base import Base
 
 
 class Question(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "question_text"
-    __tableargs__ = {"comment": "Question text"}
+    __tablename__ = "question"
+    __tableargs__ = {"comment": "Question"}
 
     text = Column(name="text", type_=Text, comment="Question text")
     explanation = Column(
@@ -23,4 +23,4 @@ class Question(CreateMixin, SaveMixin, BaseMixin, Base):
     execution_time = Column(name="time", type_=SmallInteger, comment="Question time")
 
     def __repr__(self):
-        return f"{self.question_text}"
+        return f"{self.text}"

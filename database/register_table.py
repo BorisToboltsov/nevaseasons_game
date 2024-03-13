@@ -1,17 +1,12 @@
 from sqlalchemy import MetaData
 
-from database.entity_language.model.entity_language import EntityLanguage
-from database.entity_language.model.event import Event
-from database.entity_language.model.language import Language
-from database.entity_task.model.answer_text import AnswerText
-from database.entity_task.model.answers import Answers
-from database.entity_task.model.question_text import QuestionText
-from database.entity_task.model.questions import Questions
-from database.filter.model.template_filter_questions import TemplateFilterQuestions
-from database.filter.model.users_filter_questions import UsersFilterQuestions
-from database.profile.model.account import Account
-from database.profile.model.profile import Profile
-from database.profile.model.user_responses import ProfileAnswers
+from database.game.models.game import Game, LinkGame
+from database.participant.models.participant import Participant, ParticipantGame
+from database.session.models.session import Session
+from database.task.models.answers import Answer
+from database.task.models.template_questions import Template, TemplateQuestion
+from database.task.models.questions import Question
+from database.user.models.user import User
 
 """
 Наименование index и constraint по умолчанию:
@@ -33,15 +28,13 @@ convention = {
 
 metadata = MetaData(naming_convention=convention)
 
-Language()
-AnswerText()
-QuestionText()
-Answers()
-Questions()
-Event()
-Account()
-Profile()
-ProfileAnswers()
-UsersFilterQuestions()
-EntityLanguage()
-TemplateFilterQuestions()
+User()
+Question()
+Answer()
+Game()
+Template()
+TemplateQuestion()
+Participant()
+ParticipantGame()
+LinkGame()
+Session()

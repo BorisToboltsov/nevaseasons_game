@@ -4,11 +4,11 @@ from database.base.mixin.base_mixin import BaseMixin, CreateMixin, SaveMixin
 from database.base.model.base import Base
 
 
-class Group(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "group"
-    __tableargs__ = {"comment": "Group"}
+class Template(CreateMixin, SaveMixin, BaseMixin, Base):
+    __tablename__ = "template"
+    __tableargs__ = {"comment": "Template"}
 
-    name = Column(name="name", type_=Text, comment="group name")
+    name = Column(name="name", type_=Text, comment="Template name")
     game_id = Column(
         ForeignKey("game.id", ondelete="NO ACTION"),
         nullable=False,
@@ -18,12 +18,12 @@ class Group(CreateMixin, SaveMixin, BaseMixin, Base):
         return f"{self.name}"
 
 
-class GroupQuestion(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "group_question"
-    __tableargs__ = {"comment": "Group question"}
+class TemplateQuestion(CreateMixin, SaveMixin, BaseMixin, Base):
+    __tablename__ = "template_question"
+    __tableargs__ = {"comment": "Template question"}
 
-    group_id = Column(
-        ForeignKey("group.id", ondelete="NO ACTION"),
+    template_id = Column(
+        ForeignKey("template.id", ondelete="NO ACTION"),
         nullable=False,
     )
     question_id = Column(

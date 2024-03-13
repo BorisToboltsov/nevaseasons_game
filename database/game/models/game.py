@@ -5,7 +5,7 @@ from database.base.model.base import Base
 
 
 class Game(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "Game"
+    __tablename__ = "game"
     __tableargs__ = {"comment": "Game"}
 
     name = Column(name="name", type_=String(30), comment="The name of the game")

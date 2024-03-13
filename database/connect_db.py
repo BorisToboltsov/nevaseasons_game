@@ -7,7 +7,7 @@ from database.config import database_url
 
 logging.basicConfig(
     level=logging.ERROR,
-    filename="log/db.log",
+    filename="./static/logs/db.log",
     filemode="w",
     format="%(asctime)s %(levelname)s %(message)s",
 )

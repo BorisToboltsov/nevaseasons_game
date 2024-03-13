@@ -5,8 +5,8 @@ from database.base.model.base import Base
 
 
 class Session(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "group"
-    __tableargs__ = {"comment": "Group"}
+    __tablename__ = "session"
+    __tableargs__ = {"comment": "Session"}
 
     number_participants = Column(name="number_participants", type_=Integer, comment="Number Participants")
     game_id = Column(

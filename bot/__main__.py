@@ -1,27 +1,40 @@
 import asyncio
 import logging
-import os
 
 import sentry_sdk
-from dotenv import load_dotenv
+from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
 
-from telegram_bot.connect import bot, dp
-from telegram_bot.handlers.commands.commands_handlers import router_commands
-from telegram_bot.handlers.message.message_handlers import router_message
-from telegram_bot.handlers.poll_answers.poll_answers_handlers import router_poll_answers
+from bot.handlers.commands_handlers import router_commands
+from bot.middlewares.database import Database
+from config.config import Config, load_config
+from config.database import load_database
 
 
 async def main():
-    load_dotenv()
+    # Load config
+    config: Config = load_config()
+    database_config = load_database()
 
     # Configure Sentry
-    sentry_sdk.init(os.getenv("API_TOKEN_SENTRY"))
+    sentry_sdk.init(config.sentry.token)
+
+    sm = database_config.get_sessionmaker
+
+    # Init telegram bot
+    bot = Bot(token=config.tg_bot.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    dp = Dispatcher(storage=MemoryStorage())
 
     # Configure logging
     logging.basicConfig(level=logging.WARNING)
 
     # Router register
     dp.include_router(router_commands)
+
+    # Middleware register
+    dp.update.outer_middleware(Database(sm))
 
     # Start long polling
     await dp.start_polling(bot)

@@ -16,4 +16,4 @@ class User(CreateMixin, SaveMixin, BaseMixin, Base):
     telegram_id = Column(name="telegram_id", type_=BigInteger, comment="Telegram id")
 
     def __repr__(self):
-        return f"{self.id} {self.username}"
+        return f"{self.id} {self.fio}"

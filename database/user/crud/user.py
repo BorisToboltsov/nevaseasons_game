@@ -1,11 +1,12 @@
-from database.connect_db import engine, get_session
-from database.user.models.user import User
+from typing import Type
 
-session = get_session(engine)
+from sqlalchemy.orm import Session
+
+from database.user.models.user import User
 
 
 class DbUser:
-    pass
+
     @staticmethod
-    def get_profile(telegram_id: int) -> User:
+    def get_user_from_telegram(telegram_id: int, session: Session) -> Type[User]:
         return session.query(User).filter(User.telegram_id == telegram_id).one()

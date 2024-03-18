@@ -7,7 +7,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from bot.handlers.commands_handlers import router_commands
+from bot.handlers.commands import router_commands
 from bot.middlewares.database import Database
 from config.config import Config, load_config
 from config.database import load_database

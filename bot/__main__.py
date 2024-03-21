@@ -8,6 +8,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from bot.handlers.commands import router_commands
+from bot.handlers.onboarding import router_onboarding
 from bot.middlewares.database import Database
 from config.config import Config, load_config
 from config.database import load_database
@@ -32,6 +33,7 @@ async def main():
 
     # Router register
     dp.include_router(router_commands)
+    dp.include_router(router_onboarding)
 
     # Middleware register
     dp.update.outer_middleware(Database(sm))

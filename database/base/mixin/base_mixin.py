@@ -34,8 +34,8 @@ class CreateMixin:
     @classmethod
     def create(cls, **kwargs):
         obj = cls(**kwargs)
-        sm.add(obj)
-        sm.commit()
+        sm().add(obj)
+        sm().commit()
         return obj
 
 
@@ -43,6 +43,6 @@ class SaveMixin:
     @classmethod
     def save(cls, **kwargs):
         obj = cls(**kwargs)
-        sm.add(obj)
-        sm.commit()
+        sm().add(obj)
+        sm().commit()
         return obj

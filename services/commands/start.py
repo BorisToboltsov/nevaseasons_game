@@ -16,6 +16,5 @@ class Start:
         try:
             user = db_user.get_user_by_telegram(self.message.from_user.id, self.session)
 
-
         except NoResultFound:
             await send_phone(self.message)

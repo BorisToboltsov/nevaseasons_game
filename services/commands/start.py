@@ -18,6 +18,6 @@ class Start:
         db_user = DbUser()
         try:
             user = db_user.get_user_by_telegram(self.message.from_user.id, self.session)
-            await self.dialog_manager.start(state=FSMStartGame.start, mode=StartMode.RESET_STACK)
+            await self.dialog_manager.start(state=FSMStartGame.first, mode=StartMode.RESET_STACK)
         except NoResultFound:
             await send_phone(self.message)

@@ -24,6 +24,6 @@ class GetPhone:
             user.telegram_id = self.message.from_user.id
             self.session.commit()
             await connect_success(self.message)
-            await self.dialog_manager.start(state=FSMStartGame.start, mode=StartMode.RESET_STACK)
+            await self.dialog_manager.start(state=FSMStartGame.first, mode=StartMode.RESET_STACK)
         except NoResultFound:
             await not_register(self.message)

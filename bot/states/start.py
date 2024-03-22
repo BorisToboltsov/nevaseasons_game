@@ -1,5 +1,5 @@
 from aiogram.fsm.state import StatesGroup, State
 
 
-class FSMStart(StatesGroup):
+class FSMStartGame(StatesGroup):
     start = State()

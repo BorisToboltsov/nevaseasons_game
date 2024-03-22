@@ -6,7 +6,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 
+from bot.dialogs.start_game.start_game_dialog import start_game_dialog
 from bot.handlers.commands import router_commands
 from bot.handlers.onboarding import router_onboarding
 from bot.middlewares.database import Database
@@ -34,6 +36,12 @@ async def main():
     # Router register
     dp.include_router(router_commands)
     dp.include_router(router_onboarding)
+
+    # Dialog register
+    dp.include_router(start_game_dialog)
+
+    # Setup dialogs
+    setup_dialogs(dp)
 
     # Middleware register
     dp.update.outer_middleware(Database(sm))

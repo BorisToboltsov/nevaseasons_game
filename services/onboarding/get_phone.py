@@ -1,15 +1,18 @@
 from aiogram.types import Message
+from aiogram_dialog import DialogManager, StartMode
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
+from bot.states.start import FSMStartGame
 from database.user.crud.user import DbUser
 from view.onboarding import not_register, connect_success
 
 
 class GetPhone:
-    def __init__(self, message: Message, session: Session):
+    def __init__(self, message: Message, session: Session, dialog_manager: DialogManager):
         self.message = message
         self.session = session
+        self.dialog_manager = dialog_manager
 
     async def start(self):
         contact = self.message.contact
@@ -21,6 +24,6 @@ class GetPhone:
             user.telegram_id = self.message.from_user.id
             self.session.commit()
             await connect_success(self.message)
-
+            await self.dialog_manager.start(state=FSMStartGame.start, mode=StartMode.RESET_STACK)
         except NoResultFound:
             await not_register(self.message)

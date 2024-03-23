@@ -8,3 +8,7 @@ async def get_game(dialog_manager: DialogManager, event_from_user: User, **kwarg
     game = DbGame()
     game_list = game.get_all_game(dialog_manager.middleware_data.get('session'))
     return {'game_list': game_list}
+
+
+async def get_command_quantity(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    return {'command_quantity': dialog_manager.dialog_data['command_quantity']}

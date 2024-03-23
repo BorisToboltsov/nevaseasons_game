@@ -1,10 +1,13 @@
+from pprint import pprint
+
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button
 
 from bot.states.start import FSMStartGame
-from database.session.models.session import Session
+from database.session.models.session import Session, LinkGame
+from services.start_game.link_generation import link_generation
 
 
 async def start_game_handler(callback: CallbackQuery,
@@ -28,12 +31,12 @@ async def error_command_handler(
         dialog_manager: DialogManager,
         text: str):
     await message.answer(
-        text='Необходимо ввести число, кол-во команд не больше 5. Попробуйте еще раз'
+        text='Необходимо ввести число, кол-во команд не больше 4. Попробуйте еще раз'
     )
 
 
 def command_check(text: str) -> str:
-    if all(ch.isdigit() for ch in text) and 1 <= int(text) <= 5:
+    if all(ch.isdigit() for ch in text) and 1 <= int(text) <= 4:
         return text
     raise ValueError
 
@@ -59,10 +62,24 @@ async def quantity_yes_handler(
         widget: Button,
         dialog_manager: DialogManager) -> None:
     session = dialog_manager.middleware_data.get('session')
-    game_session = Session.create(session=session,
-                                  number_participants=dialog_manager.dialog_data['command_quantity'],
-                                  game_id=dialog_manager.dialog_data['game_id'],
-                                  user_id=dialog_manager.dialog_data['user'].id,
-                                  is_active=True,
-                                  is_finished=False)
+    game_session = Session(number_participants=dialog_manager.dialog_data['command_quantity'],
+                           game_id=dialog_manager.dialog_data['game_id'],
+                           user_id=dialog_manager.dialog_data['user'].id,
+                           is_active=True,
+                           is_finished=False)
     dialog_manager.dialog_data['game_session'] = game_session
+    session.add(game_session)
+    session.flush()
+
+    bot_name = dialog_manager.middleware_data.get('event_update').callback_query.message.from_user.username
+    command_quantity = dialog_manager.dialog_data['command_quantity']
+    link_list = await link_generation(bot_name, command_quantity)
+    dialog_manager.dialog_data['link_list'] = link_list
+
+    for link in link_list:
+        link_game = LinkGame(link=link,
+                             session_id=game_session.id)
+        session.add(link_game)
+    session.commit()
+
+    await dialog_manager.next()

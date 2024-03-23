@@ -12,17 +12,3 @@ class Game(CreateMixin, SaveMixin, BaseMixin, Base):
 
     def __repr__(self):
         return f"{self.name}"
-
-
-class LinkGame(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "link_game"
-    __tableargs__ = {"comment": "Link Game"}
-
-    link = Column(name="name", type_=String(200), comment="The name of the game")
-    game_id = Column(
-        ForeignKey("game.id", ondelete="NO ACTION"),
-        nullable=False,
-    )
-
-    def __repr__(self):
-        return f"{self.game_id}"

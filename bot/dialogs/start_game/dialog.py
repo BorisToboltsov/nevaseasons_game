@@ -54,4 +54,9 @@ start_game_dialog = Dialog(
         getter=get_command_quantity,
         state=FSMStartGame.four,
     ),
+    Window(
+        Format('Участвует {command_quantity} команды, подтверждаете?'),
+        getter=get_command_quantity,
+        state=FSMStartGame.five,
+    ),
 )

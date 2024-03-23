@@ -1,5 +1,3 @@
-from pprint import pprint
-
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput

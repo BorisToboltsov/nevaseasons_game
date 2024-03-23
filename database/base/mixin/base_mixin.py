@@ -32,17 +32,17 @@ class BaseMixin:
 
 class CreateMixin:
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, session, **kwargs):
         obj = cls(**kwargs)
-        sm().add(obj)
-        sm().commit()
+        session.add(obj)
+        session.commit()
         return obj
 
 
 class SaveMixin:
     @classmethod
-    def save(cls, **kwargs):
+    def save(cls, session, **kwargs):
         obj = cls(**kwargs)
-        sm().add(obj)
-        sm().commit()
+        session.add(obj)
+        session.commit()
         return obj

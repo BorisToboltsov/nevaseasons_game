@@ -17,6 +17,7 @@ class Session(CreateMixin, SaveMixin, BaseMixin, Base):
         ForeignKey("user.id", ondelete="NO ACTION"),
         nullable=False,
     )
+    is_active = Column(name="is_active", type_=Boolean, comment="Game is active")
     is_finished = Column(name="is_finished", type_=Boolean, comment="Game is finished")
 
     def __repr__(self):

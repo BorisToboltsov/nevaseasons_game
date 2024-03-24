@@ -4,8 +4,8 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button
 
 from bot.states.start import FSMStartGame
-from database.session.models.session import Session, LinkGame
-from services.start_game.link_generation import link_generation
+from database.session.models.gamesession import GameSession, LinkGame
+from services.utils.link_generation import link_generation
 from services.utils.gen_qr_code import gen_qr_code
 
 
@@ -63,11 +63,11 @@ async def quantity_yes_handler(
         widget: Button,
         dialog_manager: DialogManager) -> None:
     session = dialog_manager.middleware_data.get('session')
-    game_session = Session(number_participants=dialog_manager.dialog_data['command_quantity'],
-                           game_id=dialog_manager.dialog_data['game_id'],
-                           user_id=dialog_manager.dialog_data['user'].id,
-                           is_active=True,
-                           is_finished=False)
+    game_session = GameSession(number_participants=dialog_manager.dialog_data['command_quantity'],
+                               game_id=dialog_manager.dialog_data['game_id'],
+                               user_id=dialog_manager.dialog_data['user'].id,
+                               is_active=True,
+                               is_finished=False)
     dialog_manager.dialog_data['game_session'] = game_session
     session.add(game_session)
     session.flush()

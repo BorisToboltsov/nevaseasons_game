@@ -24,8 +24,8 @@ class ParticipantGame(CreateMixin, SaveMixin, BaseMixin, Base):
         ForeignKey("participant.id", ondelete="NO ACTION"),
         nullable=False,
     )
-    game_id = Column(
-        ForeignKey("game.id", ondelete="NO ACTION"),
+    game_session_id = Column(
+        ForeignKey("game_session.id", ondelete="NO ACTION"),
         nullable=False,
     )
     score = Column(name="score", type_=Integer, comment="Score")

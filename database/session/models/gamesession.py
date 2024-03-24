@@ -4,9 +4,9 @@ from database.base.mixin.base_mixin import CreateMixin, SaveMixin, BaseMixin
 from database.base.model.base import Base
 
 
-class Session(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "session"
-    __tableargs__ = {"comment": "Session"}
+class GameSession(CreateMixin, SaveMixin, BaseMixin, Base):
+    __tablename__ = "game_session"
+    __tableargs__ = {"comment": "Game session"}
 
     number_participants = Column(name="number_participants", type_=Integer, comment="Number Participants")
     game_id = Column(
@@ -29,10 +29,10 @@ class LinkGame(CreateMixin, SaveMixin, BaseMixin, Base):
     __tableargs__ = {"comment": "Link Game"}
 
     link = Column(name="link", type_=String(200), comment="Link for gamers")
-    session_id = Column(
-        ForeignKey("session.id", ondelete="NO ACTION"),
+    game_session_id = Column(
+        ForeignKey("game_session.id", ondelete="NO ACTION"),
         nullable=False,
     )
 
     def __repr__(self):
-        return f"{self.session_id}"
+        return f"{self.game_session_id}"

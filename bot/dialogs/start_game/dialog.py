@@ -1,11 +1,12 @@
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Button, Select, Column
+from aiogram_dialog.widgets.kbd import Button, Select, Column, Row
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
-from bot.dialogs.start_game.getters import get_game, get_command_quantity
+from bot.dialogs.start_game.getters import get_game, get_command_quantity, get_data
 from bot.dialogs.start_game.handlers import start_game_handler, game_selection, error_command_handler, command_check, \
-    correct_command_handler, quantity_yes_handler, quantity_no_handler
+    correct_command_handler, quantity_yes_handler, quantity_no_handler, go_next, go_back
 from bot.states.start import FSMStartGame
 
 start_game_dialog = Dialog(
@@ -55,8 +56,13 @@ start_game_dialog = Dialog(
         state=FSMStartGame.four,
     ),
     Window(
-        Format('Участвует {command_quantity} команды, подтверждаете?'),
-        getter=get_command_quantity,
+        DynamicMedia("photo"),
+        Format('Команда №{text}'),
+        Row(
+            Button(Const('◀️ Назад'), id='b_back', on_click=go_back),
+            Button(Const('Вперед ▶️'), id='b_next', on_click=go_next),
+        ),
         state=FSMStartGame.five,
+        getter=get_data,
     ),
 )

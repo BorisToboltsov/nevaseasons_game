@@ -6,6 +6,7 @@ from aiogram_dialog.widgets.kbd import Button
 from bot.states.start import FSMStartGame
 from database.session.models.session import Session, LinkGame
 from services.start_game.link_generation import link_generation
+from services.utils.gen_qr_code import gen_qr_code
 
 
 async def start_game_handler(callback: CallbackQuery,
@@ -45,6 +46,8 @@ async def correct_command_handler(
         dialog_manager: DialogManager,
         text: str) -> None:
     dialog_manager.dialog_data['command_quantity'] = int(text)
+    await message.bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
+    await message.delete()
     await dialog_manager.next()
 
 
@@ -80,4 +83,25 @@ async def quantity_yes_handler(
         session.add(link_game)
     session.commit()
 
+    qr_code_path_list = await gen_qr_code(link_list)
+    dialog_manager.dialog_data['qr_code_path_list'] = qr_code_path_list
+
     await dialog_manager.next()
+
+
+async def go_next(callback: CallbackQuery,
+                  widget: Button,
+                  dialog_manager: DialogManager):
+    number_list = dialog_manager.dialog_data['number_list_go_next'] + 1
+    if number_list > len(dialog_manager.dialog_data['qr_code_path_list']) - 1:
+        number_list = 0
+    dialog_manager.dialog_data['number_list_go_next'] = number_list
+
+
+async def go_back(callback: CallbackQuery,
+                  widget: Button,
+                  dialog_manager: DialogManager):
+    number_list = dialog_manager.dialog_data['number_list_go_next'] - 1
+    if number_list < 0:
+        number_list = len(dialog_manager.dialog_data['qr_code_path_list']) - 1
+    dialog_manager.dialog_data['number_list_go_next'] = number_list

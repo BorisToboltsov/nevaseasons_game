@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from database.session.models.gamesession import GameSession, LinkGame
 
 
-class DbSession:
+class DbGameSession:
 
     @staticmethod
     def get_game_session_by_id(game_session_id: int, session: Session) -> Type[GameSession]:

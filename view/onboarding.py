@@ -16,3 +16,13 @@ async def not_register(message: Message):
 async def connect_success(message: Message):
     context = "Поздравляем вы подключены к игре в качестве ведущего."
     await message.bot.send_message(message.from_user.id, context, reply_markup=keyboard_remove())
+
+
+async def game_is_finished(message: Message):
+    context = "Игра закончена!"
+    await message.bot.send_message(message.from_user.id, context, reply_markup=keyboard_remove())
+
+
+async def invalid_link(message: Message):
+    context = "Не верная ссылка. Нужно чтобы ведущий создал игру."
+    await message.bot.send_message(message.from_user.id, context, reply_markup=keyboard_remove())

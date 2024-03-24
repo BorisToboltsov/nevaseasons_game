@@ -79,7 +79,7 @@ async def quantity_yes_handler(
 
     for link in link_list:
         link_game = LinkGame(link=link,
-                             session_id=game_session.id)
+                             game_session_id=game_session.id)
         session.add(link_game)
     session.commit()
 

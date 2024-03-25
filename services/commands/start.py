@@ -4,6 +4,7 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from bot.states.start import FSMStartGame
+from database.participant.models.participant import Participant
 from database.session.crud.session import DbLinkGame
 from database.user.crud.user import DbUser
 from services.utils.utm_tag import UtmTag
@@ -31,6 +32,11 @@ class Start:
                     await game_is_finished(self.message)
                 elif game_session.is_active:
                     print('Поздравляем вы зарегистрированы')
+                    username = get_random_username()
+                    participant = Participant.create(session=self.session,
+                                                     username=username,
+                                                     telegram_id=self.message.from_user.id)
+
             except NoResultFound:
                 await invalid_link(self.message)
 

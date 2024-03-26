@@ -3,7 +3,7 @@ from aiogram_dialog import DialogManager, StartMode
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
-from bot.states.start import FSMStartGame
+from bot.states.onboarding import FSMOnboarding
 from database.participant.crud.participant import DbCommandName, DbParticipantGame, DbParticipant
 from database.participant.models.participant import Participant, ParticipantGame
 from database.session.crud.session import DbLinkGame
@@ -95,7 +95,7 @@ class Start:
             db_user = DbUser()
             try:
                 user = db_user.get_user_by_telegram(self.message.from_user.id, self.session)
-                await self.dialog_manager.start(state=FSMStartGame.first, mode=StartMode.RESET_STACK, data={'user': user})
+                await self.dialog_manager.start(state=FSMOnboarding.first, mode=StartMode.RESET_STACK, data={'user': user})
             except NoResultFound:
                 await send_phone(self.message)
 

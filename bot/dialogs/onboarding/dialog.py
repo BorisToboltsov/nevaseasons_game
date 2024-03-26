@@ -4,19 +4,19 @@ from aiogram_dialog.widgets.kbd import Button, Select, Column, Row
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
-from bot.dialogs.start_game.getters import get_game, get_command_quantity, get_data
-from bot.dialogs.start_game.handlers import start_game_handler, game_selection, error_command_handler, command_check, \
+from bot.dialogs.onboarding.getters import get_game, get_command_quantity, get_data
+from bot.dialogs.onboarding.handlers import start_game_handler, game_selection, error_command_handler, command_check, \
     correct_command_handler, quantity_yes_handler, quantity_no_handler, go_next, go_back
-from bot.states.start import FSMStartGame
+from bot.states.onboarding import FSMOnboarding
 
 start_game_dialog = Dialog(
     Window(
         Const(text='Можно начинать новую игру!'),
         Button(
             text=Const('Начать игру!'),
-            id='start_game',
+            id='start_onboarding',
             on_click=start_game_handler),
-        state=FSMStartGame.first
+        state=FSMOnboarding.first
     ),
     Window(
         Const(text='Выберите игру.'),
@@ -30,7 +30,7 @@ start_game_dialog = Dialog(
             ),
         ),
         getter=get_game,
-        state=FSMStartGame.two
+        state=FSMOnboarding.two
     ),
     Window(
         Const(text='Какое количество команд участвует?'),
@@ -40,7 +40,7 @@ start_game_dialog = Dialog(
             on_success=correct_command_handler,
             on_error=error_command_handler,
         ),
-        state=FSMStartGame.three,
+        state=FSMOnboarding.three,
     ),
     Window(
         Format('Участвует {command_quantity} команды, подтверждаете?'),
@@ -53,7 +53,7 @@ start_game_dialog = Dialog(
             id='choice_command_quantity_no',
             on_click=quantity_no_handler),
         getter=get_command_quantity,
-        state=FSMStartGame.four,
+        state=FSMOnboarding.four,
     ),
     Window(
         DynamicMedia("photo"),
@@ -62,7 +62,7 @@ start_game_dialog = Dialog(
             Button(Const('◀️ Назад'), id='b_back', on_click=go_back),
             Button(Const('Вперед ▶️'), id='b_next', on_click=go_next),
         ),
-        state=FSMStartGame.five,
+        state=FSMOnboarding.five,
         getter=get_data,
     ),
 )

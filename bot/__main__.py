@@ -8,7 +8,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 
-from bot.dialogs.start_game.dialog import start_game_dialog
+from bot.dialogs.onboarding.dialog import start_game_dialog
 from bot.handlers.commands import router_commands
 from bot.handlers.onboarding import router_onboarding
 from bot.middlewares.database import Database

@@ -3,7 +3,7 @@ from aiogram_dialog import DialogManager
 from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button
 
-from bot.states.start import FSMStartGame
+from bot.states.onboarding import FSMOnboarding
 from database.session.models.gamesession import GameSession, LinkGame
 from services.utils.link_generation import link_generation
 from services.utils.gen_qr_code import gen_qr_code
@@ -55,7 +55,7 @@ async def quantity_no_handler(callback: CallbackQuery,
                               widget: Button,
                               dialog_manager: DialogManager) -> None:
     dialog_manager.dialog_data['command_quantity'] = 0
-    await dialog_manager.switch_to(state=FSMStartGame.three)
+    await dialog_manager.switch_to(state=FSMOnboarding.three)
 
 
 async def quantity_yes_handler(

@@ -80,6 +80,9 @@ class Start:
                 all_participant_game = db_participant_game.get_all_participant_game_by_game_session(session=self.session,
                                                                                                     game_session_id=game_session.id)
                 if len(all_participant_game) == game_session.number_participants:
+                    for i, participant_game in enumerate(all_participant_game):
+                        participant_game.sequence_number = i + 1
+                        self.session.commit()
                     await create_participant_game_full(self.message, command_name.name)
                     await command_registration_full(self.message,
                                                     game_session.user.telegram_id,

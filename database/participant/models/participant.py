@@ -32,6 +32,7 @@ class ParticipantGame(CreateMixin, SaveMixin, BaseMixin, Base):
     __tableargs__ = {"comment": "Participant Game"}
 
     score = Column(name="score", type_=Integer, comment="Score", default=0)
+    sequence_number = Column(name="sequence_number", type_=Integer, comment="Sequence number", default=0)
     participant_id = Column(
         ForeignKey("participant.id", ondelete="NO ACTION"),
         nullable=False,

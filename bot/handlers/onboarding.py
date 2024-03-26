@@ -20,4 +20,3 @@ async def get_phone_handler(message: Message, session: Session, dialog_manager: 
 @router_onboarding.callback_query(F.data == 'Старт игры')
 async def start_game_handler(message: Message, dialog_manager: DialogManager) -> NoReturn:
     await dialog_manager.start(state=FSMStartGame.first, mode=StartMode.RESET_STACK)
-

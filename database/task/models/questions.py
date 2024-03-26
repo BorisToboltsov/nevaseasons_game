@@ -20,7 +20,7 @@ class Question(CreateMixin, SaveMixin, BaseMixin, Base):
     )
     path_image = Column(name="path_image", type_=String(100), comment="Path to image", nullable=True)
     multi_answer = Column(name="multi_answer", type_=Boolean, comment="Multi answer", default=False)
-    requires_verification = Column(name="multi_answer", type_=Boolean, comment="Multi answer", default=False)
+    requires_verification = Column(name="requires_verification", type_=Boolean, comment="Requires verification", default=False)
 
     def __repr__(self):
         return f"{self.text}"

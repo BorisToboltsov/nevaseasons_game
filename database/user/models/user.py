@@ -11,7 +11,6 @@ class User(CreateMixin, SaveMixin, BaseMixin, Base):
 
     fio = Column(
         name="fio", type_=String(100), comment="Fio")
-    email = Column(name="email", type_=EmailType, comment="Email")
     phone_number = Column(name="phone_number", type_=String(11), comment="Phone number")
     telegram_id = Column(name="telegram_id", type_=BigInteger, comment="Telegram id")
 

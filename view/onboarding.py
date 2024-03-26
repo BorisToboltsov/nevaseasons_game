@@ -35,7 +35,7 @@ async def participant_game_exist(message: Message):
 
 
 async def create_participant_game(message: Message, command_name: str):
-    context = f"Итак, сегодня вы и ваша команда - {command_name}.\nПоздравляем...\nИ да, название поменять нельзя, сегодня вы {command_name}...\nПодтолкните своих противников, чтобы они быстрее регались."
+    context = f"Итак, вы и ваша команда - {command_name}.\nПоздравляем...\nИ да, название поменять нельзя, сегодня вы {command_name}...\nПодтолкните своих противников, чтобы они быстрее регались."
     await message.bot.send_message(message.from_user.id, context, reply_markup=keyboard_remove())
 
 
@@ -49,7 +49,7 @@ async def command_registration(message: Message,
 
 
 async def create_participant_game_full(message: Message, command_name: str):
-    context = f"Итак, сегодня вы и ваша команда - {command_name}.\nПоздравляем...\nИ да, название поменять нельзя, сегодня вы {command_name}...\n"
+    context = f"Итак, вы и ваша команда - {command_name}.\nПоздравляем...\nИ да, название поменять нельзя, сегодня вы {command_name}...\n"
     await message.bot.send_message(message.from_user.id, context, reply_markup=keyboard_remove())
 
 

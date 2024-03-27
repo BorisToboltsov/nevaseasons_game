@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, Boolean, SmallInteger
+from sqlalchemy import Column, String, Text, Boolean
 
 from database.base.mixin.base_mixin import BaseMixin, CreateMixin, SaveMixin
 from database.base.model.base import Base

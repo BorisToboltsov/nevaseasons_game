@@ -13,6 +13,9 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
 
     name = Column(name="name", type_=Text, comment="Template name")
     team_number = Column(name="team_number", type_=Integer, comment="Team number", default=1)
+    serial_number_question = Column(name="serial_number_question",
+                                    type_=Integer,
+                                    comment="Serial number question", default=1)
     game_id = Column(
         ForeignKey("game.id", ondelete="NO ACTION"),
         nullable=False,
@@ -23,17 +26,17 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
         return f"{self.name}"
 
 
-class TemplateQuestion(CreateMixin, SaveMixin, BaseMixin, Base):
-    __tablename__ = "template_question"
-    __tableargs__ = {"comment": "Template question"}
-
-    template_id = Column(
-        ForeignKey("template.id", ondelete="NO ACTION"),
-        nullable=False,
-    )
-    question_id = Column(
-        ForeignKey("question.id", ondelete="NO ACTION"),
-        nullable=False,
-    )
-    template = relationship(Template, backref='template_questions')
-    question = relationship(Question, backref='template_questions')
+# class TemplateQuestion(CreateMixin, SaveMixin, BaseMixin, Base):
+#     __tablename__ = "template_question"
+#     __tableargs__ = {"comment": "Template question"}
+#
+#     template_id = Column(
+#         ForeignKey("template.id", ondelete="NO ACTION"),
+#         nullable=False,
+#     )
+#     question_id = Column(
+#         ForeignKey("question.id", ondelete="NO ACTION"),
+#         nullable=False,
+#     )
+#     template = relationship(Template, backref='template_questions')
+#     question = relationship(Question, backref='template_questions')

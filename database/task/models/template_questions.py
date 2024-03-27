@@ -20,7 +20,12 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
         ForeignKey("game.id", ondelete="NO ACTION"),
         nullable=False,
     )
+    question_id = Column(
+        ForeignKey("question.id", ondelete="NO ACTION"),
+        nullable=False,
+    )
     game = relationship(Game, backref='templates')
+    question = relationship(Question, backref='templates')
 
     def __repr__(self):
         return f"{self.name}"

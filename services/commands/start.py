@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from bot.states.onboarding import FSMOnboarding
 from database.participant.crud.participant import DbCommandName, DbParticipantGame, DbParticipant
 from database.participant.models.participant import Participant, ParticipantGame
-from database.session.crud.session import DbLinkGame
+from database.session.crud.game_session import DbLinkGame
 from database.user.crud.user import DbUser
 from services.utils.utm_tag import UtmTag
 from view.onboarding import send_phone, game_is_finished, invalid_link, participant_game_exist, create_participant_game, \

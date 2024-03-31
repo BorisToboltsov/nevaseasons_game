@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from database.base.mixin.base_mixin import CreateMixin, SaveMixin, BaseMixin
 from database.base.model.base import Base
+from database.game.models.game import Game
 from database.user.models.user import User
 
 
@@ -22,6 +23,7 @@ class GameSession(CreateMixin, SaveMixin, BaseMixin, Base):
     is_active = Column(name="is_active", type_=Boolean, comment="Game is active")
     is_finished = Column(name="is_finished", type_=Boolean, comment="Game is finished")
     user = relationship(User, backref='game_sessions')
+    game = relationship(Game, backref='game_sessions')
 
     def __repr__(self):
         return f"{self.game_id}"

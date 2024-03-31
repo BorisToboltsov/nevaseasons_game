@@ -28,7 +28,7 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
     question = relationship(Question, backref='templates')
 
     def __repr__(self):
-        return f"{self.name}"
+        return f"{self.name} №{self.team_number}"
 
 
 # class TemplateQuestion(CreateMixin, SaveMixin, BaseMixin, Base):

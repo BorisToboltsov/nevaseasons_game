@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from database.game.crud.game import DbGame
 from database.task.models.answers import Answer
 from database.task.models.questions import Question
-from database.task.models.template_questions import Template
+from database.task.models.template import Template
 from services.init_database.print_message_decorator import print_message
 
 

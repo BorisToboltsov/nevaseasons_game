@@ -2,9 +2,9 @@ from sqlalchemy import MetaData
 
 from database.game.models.game import Game
 from database.participant.models.participant import Participant, ParticipantGame
-from database.session.models.gamesession import GameSession, LinkGame
+from database.session.models.game_session import GameSession, LinkGame
 from database.task.models.answers import Answer
-from database.task.models.template_questions import Template
+from database.task.models.template import Template
 from database.task.models.questions import Question
 from database.user.models.user import User
 

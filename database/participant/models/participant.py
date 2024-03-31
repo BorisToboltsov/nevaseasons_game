@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from database.base.mixin.base_mixin import BaseMixin, CreateMixin, SaveMixin
 from database.base.model.base import Base
-from database.session.models.gamesession import GameSession, LinkGame
+from database.session.models.game_session import GameSession, LinkGame
 
 
 class Participant(CreateMixin, SaveMixin, BaseMixin, Base):
@@ -54,3 +54,6 @@ class ParticipantGame(CreateMixin, SaveMixin, BaseMixin, Base):
     game_session = relationship(GameSession, backref='participant_games')
     link_game = relationship(LinkGame, backref='participant_games')
     command_name = relationship(CommandName, backref='participant_games')
+
+    def __repr__(self):
+        return f"{self.participant.telegram_id}"

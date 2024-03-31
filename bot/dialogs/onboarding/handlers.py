@@ -4,7 +4,7 @@ from aiogram_dialog.widgets.input import ManagedTextInput
 from aiogram_dialog.widgets.kbd import Button
 
 from bot.states.onboarding import FSMOnboarding
-from database.session.models.gamesession import GameSession, LinkGame
+from database.session.models.game_session import GameSession, LinkGame
 from services.utils.link_generation import link_generation
 from services.utils.gen_qr_code import gen_qr_code
 

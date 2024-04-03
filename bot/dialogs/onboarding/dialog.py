@@ -9,7 +9,7 @@ from bot.dialogs.onboarding.handlers import start_game_handler, game_selection, 
     correct_command_handler, quantity_yes_handler, quantity_no_handler, go_next, go_back
 from bot.states.onboarding import FSMOnboarding
 
-start_game_dialog = Dialog(
+onboarding_dialog = Dialog(
     Window(
         Const(text='Можно начинать новую игру!'),
         Button(

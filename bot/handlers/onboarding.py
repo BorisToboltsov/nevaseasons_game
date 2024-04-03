@@ -1,16 +1,17 @@
 from typing import NoReturn
 
 from aiogram import Router, F
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from aiogram_dialog import DialogManager, StartMode
+from aiogram_dialog import DialogManager
 from sqlalchemy.orm import Session
 
-from bot.states.start_game import FSMStartGame
 from database.participant.crud.participant import DbParticipantGame
 from database.session.crud.game_session import DbGameSession
 from database.task.crud.template import DbTemplate
 from database.user.crud.user import DbUser
 from services.onboarding.get_phone import GetPhone
+from view.onboarding import start_game_participant
 
 router_onboarding = Router()
 
@@ -22,7 +23,7 @@ async def get_phone_handler(message: Message, session: Session, dialog_manager: 
 
 
 @router_onboarding.callback_query(F.data == 'Старт игры')
-async def start_game_handler(message: Message, dialog_manager: DialogManager) -> NoReturn:
+async def start_game_handler(message: Message, dialog_manager: DialogManager, state: FSMContext) -> NoReturn:
     session = dialog_manager.middleware_data.get('session')
 
     db_user = DbUser()
@@ -35,16 +36,13 @@ async def start_game_handler(message: Message, dialog_manager: DialogManager) ->
     db_participant_game = DbParticipantGame()
     participant_game_list = db_participant_game.get_all_participant_game_by_game_session(game_session_id=game_session.id,
                                                                                          session=session)
+    await state.update_data(
+        game_session=game_session, user=user
+    )
 
     for participant_game in participant_game_list:
         db_template = DbTemplate()
         templates = db_template.get_task_list_by_template(session=session,
                                                           game_id=game_session.game.id,
                                                           team_number=participant_game.sequence_number)
-        print(templates)
-
-    # await dialog_manager.start(state=FSMStartGame.first,
-    #                            mode=StartMode.RESET_STACK,
-    #                            data={'user': user,
-    #                                  'game_session': game_session,
-    #                                  'participant_game': participant_game})
+        await start_game_participant(message, participant_game.participant.telegram_id)

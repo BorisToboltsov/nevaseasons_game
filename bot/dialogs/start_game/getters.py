@@ -5,5 +5,6 @@
 async def get_task(**kwargs):
     dialog_manager = kwargs.get('dialog_manager')
     participant = dialog_manager.start_data.get('participant')
+    # print(dialog_manager.start_data)
     # print(kwargs)
     return {'text': participant.telegram_id}

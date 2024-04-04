@@ -12,7 +12,6 @@ from bot.dialogs.onboarding.dialog import onboarding_dialog
 from bot.dialogs.start_game.dialog import start_game_dialog
 from bot.handlers.commands import router_commands
 from bot.handlers.onboarding import router_onboarding
-from bot.handlers.start_game import router_start_game
 from bot.middlewares.database import Database
 from config.config import Config, load_config
 from config.database import load_database
@@ -38,7 +37,6 @@ async def main():
     # Router register
     dp.include_router(router_commands)
     dp.include_router(router_onboarding)
-    dp.include_router(router_start_game)
 
     # Dialog register
     dp.include_router(onboarding_dialog)

@@ -2,16 +2,17 @@ from typing import NoReturn
 
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
-from aiogram_dialog import DialogManager
+from aiogram.types import Message, User, Chat
+from aiogram_dialog import DialogManager, StartMode, ShowMode
+from aiogram_dialog.manager.bg_manager import BgManager
 from sqlalchemy.orm import Session
 
+from bot.states.start_game import FSMStartGame
 from database.participant.crud.participant import DbParticipantGame
 from database.session.crud.game_session import DbGameSession
 from database.task.crud.template import DbTemplate
 from database.user.crud.user import DbUser
 from services.onboarding.get_phone import GetPhone
-from view.onboarding import start_game_participant
 
 router_onboarding = Router()
 
@@ -45,4 +46,23 @@ async def start_game_handler(message: Message, dialog_manager: DialogManager, st
         templates = db_template.get_task_list_by_template(session=session,
                                                           game_id=game_session.game.id,
                                                           team_number=participant_game.sequence_number)
-        await start_game_participant(message, participant_game.participant.telegram_id)
+
+        print(templates)
+
+        user = User(id=participant_game.participant.telegram_id, is_bot=False, first_name="First name")
+        chat = Chat(id=participant_game.participant.telegram_id, type="private")
+        manager = BgManager(user=user,
+                            chat=chat,
+                            bot=message.bot,
+                            router=router_onboarding,
+                            intent_id=None, stack_id="")
+
+        await manager.start(FSMStartGame.first,
+                            mode=StartMode.NORMAL,
+                            show_mode=ShowMode.EDIT,
+                            data={'user': user,
+                                  'game_session': game_session,
+                                  'participant_game': participant_game,
+                                  'participant': participant_game.participant,
+                                  'template': templates}
+                            )

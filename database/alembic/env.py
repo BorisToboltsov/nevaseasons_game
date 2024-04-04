@@ -3,9 +3,13 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+from config.database import load_database
 from database import register_table
 from database.base.model.base import Base
-from database.config import database_url
+
+
+database_config = load_database()
+database_url = database_config.url
 
 config = context.config
 config.set_main_option("sqlalchemy.url", str(database_url))
@@ -17,8 +21,6 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 metadata = register_table.metadata
 target_metadata = Base.metadata
 

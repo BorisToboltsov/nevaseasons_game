@@ -1,10 +1,10 @@
 from sqlalchemy import MetaData
 
-from database.game.models.game import Game, LinkGame
+from database.game.models.game import Game
 from database.participant.models.participant import Participant, ParticipantGame
-from database.session.models.session import Session
+from database.session.models.game_session import GameSession, LinkGame
 from database.task.models.answers import Answer
-from database.task.models.template_questions import Template, TemplateQuestion
+from database.task.models.template import Template
 from database.task.models.questions import Question
 from database.user.models.user import User
 
@@ -33,8 +33,7 @@ Question()
 Answer()
 Game()
 Template()
-TemplateQuestion()
 Participant()
 ParticipantGame()
 LinkGame()
-Session()
+GameSession()

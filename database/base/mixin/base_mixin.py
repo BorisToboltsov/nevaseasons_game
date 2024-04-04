@@ -1,9 +1,11 @@
 from sqlalchemy import JSON, Boolean, Column, DateTime, Integer
 from sqlalchemy.sql import func
 
-from database.connect_db import engine, get_session
+from config.database import load_database
 
-session = get_session(engine)
+
+database_config = load_database()
+sm = database_config.get_sessionmaker
 
 
 class BaseMixin:
@@ -30,7 +32,7 @@ class BaseMixin:
 
 class CreateMixin:
     @classmethod
-    def create(cls, **kwargs):
+    def create(cls, session, **kwargs):
         obj = cls(**kwargs)
         session.add(obj)
         session.commit()
@@ -39,7 +41,7 @@ class CreateMixin:
 
 class SaveMixin:
     @classmethod
-    def save(cls, **kwargs):
+    def save(cls, session, **kwargs):
         obj = cls(**kwargs)
         session.add(obj)
         session.commit()

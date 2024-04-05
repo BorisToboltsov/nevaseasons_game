@@ -1,36 +1,63 @@
-from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.input import TextInput
-from aiogram_dialog.widgets.kbd import Select
-from aiogram_dialog.widgets.text import Format
 
-from bot.dialogs.start_game.getters import get_task
-from bot.dialogs.start_game.handlers import select_answer
+from aiogram.enums import ContentType
+from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Select, Button, Column
+from aiogram_dialog.widgets.text import Format, Const
+
+from bot.dialogs.start_game.getters import get_task_choice, get_task_input
+from bot.dialogs.start_game.handlers import select_answer, message_handler, start_game
 from bot.states.start_game import FSMStartGame
 
 start_game_dialog = Dialog(
     Window(
-        Format('Вопрос №{number_question}\n\n'),
-        Format('{question_text}'),
-        Select(
-            Format('{item.answer_text}'),
-            id='answer',
-            item_id_getter=lambda x: x.id,
-            items='answers_list',
-            on_click=select_answer,
+        Const('Нажми старт'),
+        Button(
+            text=Const('Старт'),
+            id='button_1',
+            on_click=start_game),
+        state=FSMStartGame.distribution,
+    ),
+    Window(
+        Format('Вопрос №{number_question}\n\n', when='not_send_answer'),
+        Format('{question_text}', when='not_send_answer'),
+        Const('Ожидайте проверки ответа', when='send_answer'),
+        Column(
+            Select(
+                Format('{item.answer_text}'),
+                id='answer',
+                item_id_getter=lambda x: x.answer_text,
+                items='answers_list',
+                on_click=select_answer,
+                when='not_send_answer'
+            ),
         ),
-        state=FSMStartGame.first,
-        getter=get_task,
+        state=FSMStartGame.choice,
+        getter=get_task_choice,
     ),
     Window(
         Format('Вопрос №{number_question}\n\n'),
         Format('{question_text}'),
-        TextInput(
-            id='age_input',
-            type_factory=age_check,
-            on_success=correct_age_handler,
-            on_error=error_age_handler,
+        MessageInput(
+            func=message_handler,
+            content_types=ContentType.TEXT,
         ),
-        state=FSMStartGame.two,
-        getter=get_task,
+        state=FSMStartGame.input_text,
+        getter=get_task_input,
+    ),
+    Window(
+        Format('Вопрос №{number_question}\n\n'),
+        Format('{question_text}'),
+
+        MessageInput(
+            func=message_handler,
+            content_types=ContentType.TEXT,
+        ),
+        state=FSMStartGame.input_text_photo,
+        getter=get_task_input,
+    ),
+    Window(
+        Const('Тест'),
+        state=FSMStartGame.test,
     ),
 )

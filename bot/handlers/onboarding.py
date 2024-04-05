@@ -1,3 +1,4 @@
+import uuid
 from typing import NoReturn
 
 from aiogram import Router, F
@@ -56,7 +57,7 @@ async def start_game_handler(message: Message, dialog_manager: DialogManager, st
                             router=router_onboarding,
                             intent_id=None, stack_id="")
 
-        await manager.start(FSMStartGame.first,
+        await manager.start(FSMStartGame.distribution,
                             mode=StartMode.NORMAL,
                             show_mode=ShowMode.EDIT,
                             data={'user': user,

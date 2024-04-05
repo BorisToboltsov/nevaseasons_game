@@ -8,6 +8,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 
+from bot.dialogs.leader.dialog import leader_dialog
 from bot.dialogs.onboarding.dialog import onboarding_dialog
 from bot.dialogs.start_game.dialog import start_game_dialog
 from bot.handlers.commands import router_commands
@@ -41,6 +42,7 @@ async def main():
     # Dialog register
     dp.include_router(onboarding_dialog)
     dp.include_router(start_game_dialog)
+    dp.include_router(leader_dialog)
 
     # Setup dialogs
     setup_dialogs(dp)

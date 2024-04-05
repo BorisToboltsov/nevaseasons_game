@@ -43,11 +43,10 @@ async def start_game_handler(message: Message, dialog_manager: DialogManager, st
 
     for participant_game in participant_game_list:
         db_template = DbTemplate()
-        templates = db_template.get_task_list_by_template(session=session,
-                                                          game_id=game_session.game.id,
-                                                          team_number=participant_game.sequence_number)
-
-        print(templates)
+        templates_not_sort = db_template.get_task_list_by_template(session=session,
+                                                                   game_id=game_session.game.id,
+                                                                   team_number=participant_game.sequence_number)
+        templates = sorted(templates_not_sort, key=lambda x: x.serial_number_question, reverse=False)
 
         user = User(id=participant_game.participant.telegram_id, is_bot=False, first_name="First name")
         chat = Chat(id=participant_game.participant.telegram_id, type="private")
@@ -64,5 +63,5 @@ async def start_game_handler(message: Message, dialog_manager: DialogManager, st
                                   'game_session': game_session,
                                   'participant_game': participant_game,
                                   'participant': participant_game.participant,
-                                  'template': templates}
+                                  'templates': templates}
                             )

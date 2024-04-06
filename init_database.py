@@ -2,7 +2,9 @@ from config.config import Config, load_config
 from config.database import load_database
 from services.init_database.add_command_name import InitDbSaveCommandName
 from services.init_database.add_game import InitDbSaveGame
-from services.init_database.add_questions_answers_template import InitDbQuestionsAnswerTemplate
+from services.init_database.add_questions_answers_template import (
+    InitDbQuestionsAnswerTemplate,
+)
 from services.init_database.add_user import InitDbUser
 
 config: Config = load_config()

@@ -1,6 +1,6 @@
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, String
 
-from database.base.mixin.base_mixin import CreateMixin, SaveMixin, BaseMixin
+from database.base.mixin.base_mixin import BaseMixin, CreateMixin, SaveMixin
 from database.base.model.base import Base
 
 

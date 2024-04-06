@@ -3,7 +3,6 @@ from sqlalchemy.sql import func
 
 from config.database import load_database
 
-
 database_config = load_database()
 sm = database_config.get_sessionmaker
 

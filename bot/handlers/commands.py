@@ -12,6 +12,8 @@ router_commands = Router()
 
 
 @router_commands.message(CommandStart())
-async def commands_start(message: Message, session: Session, dialog_manager: DialogManager) -> NoReturn:
+async def commands_start(
+    message: Message, session: Session, dialog_manager: DialogManager
+) -> NoReturn:
     start = Start(message, session, dialog_manager)
     await start.start()

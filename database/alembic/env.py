@@ -7,7 +7,6 @@ from config.database import load_database
 from database import register_table
 from database.base.model.base import Base
 
-
 database_config = load_database()
 database_url = database_config.url
 

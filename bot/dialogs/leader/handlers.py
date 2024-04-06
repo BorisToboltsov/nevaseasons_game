@@ -5,11 +5,15 @@ from aiogram_dialog.widgets.kbd import Button
 from bot.states.start_game import FSMStartGame
 
 
-async def button_yes(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
-    bg = dialog_manager.start_data.get('bg')
+async def button_yes(
+    callback: CallbackQuery, button: Button, dialog_manager: DialogManager
+):
+    bg = dialog_manager.start_data.get("bg")
     await bg.switch_to(state=FSMStartGame.test)
     await dialog_manager.done()
 
 
-async def button_no(callback: CallbackQuery, button: Button, dialog_manager: DialogManager):
+async def button_no(
+    callback: CallbackQuery, button: Button, dialog_manager: DialogManager
+):
     pass

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Text, ForeignKey, Integer
+from sqlalchemy import Column, ForeignKey, Integer, Text
 from sqlalchemy.orm import relationship
 
 from database.base.mixin.base_mixin import BaseMixin, CreateMixin, SaveMixin
@@ -12,10 +12,15 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
     __tableargs__ = {"comment": "Template"}
 
     name = Column(name="name", type_=Text, comment="Template name")
-    team_number = Column(name="team_number", type_=Integer, comment="Team number", default=1)
-    serial_number_question = Column(name="serial_number_question",
-                                    type_=Integer,
-                                    comment="Serial number question", default=1)
+    team_number = Column(
+        name="team_number", type_=Integer, comment="Team number", default=1
+    )
+    serial_number_question = Column(
+        name="serial_number_question",
+        type_=Integer,
+        comment="Serial number question",
+        default=1,
+    )
     game_id = Column(
         ForeignKey("game.id", ondelete="NO ACTION"),
         nullable=False,
@@ -24,8 +29,8 @@ class Template(CreateMixin, SaveMixin, BaseMixin, Base):
         ForeignKey("question.id", ondelete="NO ACTION"),
         nullable=False,
     )
-    game = relationship(Game, backref='templates')
-    question = relationship(Question, backref='templates')
+    game = relationship(Game, backref="templates")
+    question = relationship(Question, backref="templates")
 
     def __repr__(self):
         return f"{self.name} №{self.team_number}"

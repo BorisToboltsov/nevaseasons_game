@@ -4,15 +4,16 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button, Column, Select
 from aiogram_dialog.widgets.text import Const, Format
 
-from bot.dialogs.start_game.getters import get_task_choice, get_task_input
+from bot.dialogs.start_game.getters import get_task_choice, get_task_input, get_start_message
 from bot.dialogs.start_game.handlers import message_handler, select_answer, start_game
 from bot.states.start_game import FSMStartGame
 
 start_game_dialog = Dialog(
     Window(
-        Const("Нажми старт"),
-        Button(text=Const("Старт"), id="button_1", on_click=start_game),
-        state=FSMStartGame.distribution,
+        Format("{text}"),
+        Button(text=Format("{button}"), id="button_1", on_click=start_game),
+        state=FSMStartGame.start,
+        getter=get_start_message,
     ),
     Window(
         Format("Вопрос №{number_question}\n\n", when="not_send_answer"),
@@ -53,6 +54,7 @@ start_game_dialog = Dialog(
     ),
     Window(
         Const("Тест"),
-        state=FSMStartGame.test,
+        state=FSMStartGame.distribution,
+        getter=get_task_input,
     ),
 )

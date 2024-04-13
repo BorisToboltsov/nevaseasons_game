@@ -6,4 +6,4 @@ class FSMStartGame(StatesGroup):
     choice = State()
     input_text = State()
     input_text_photo = State()
-    test = State()
+    start = State()

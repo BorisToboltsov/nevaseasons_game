@@ -73,7 +73,7 @@ async def start_game_handler(
         )
 
         await manager.start(
-            FSMStartGame.distribution,
+            FSMStartGame.start,
             mode=StartMode.NORMAL,
             show_mode=ShowMode.EDIT,
             data={

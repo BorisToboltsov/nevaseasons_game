@@ -1,3 +1,5 @@
+from typing import NoReturn
+
 from aiogram.types import CallbackQuery, Chat, Message, User
 from aiogram_dialog import DialogManager, ShowMode, StartMode
 from aiogram_dialog.manager.bg_manager import BgManager
@@ -16,6 +18,7 @@ async def select_answer(
 ):
     participant_answer = callback.data
     task = dialog_manager.dialog_data.get("current_task")
+    templates = dialog_manager.dialog_data.get("templates")
     dialog_manager.dialog_data["send_answer"] = True
     for answer in task.answers_list:
         if answer.is_correct:
@@ -40,7 +43,6 @@ async def select_answer(
             stack_id="",
         )
         bg = dialog_manager.bg()
-
         await manager.start(
             FSMLeader.first,
             mode=StartMode.NORMAL,
@@ -50,12 +52,16 @@ async def select_answer(
                 "participant_answer": participant_answer,
                 "command_name": participant_game.command_name.name,
                 "bg": bg,
+                "dialog_manager": dialog_manager,
+                "current_task": task,
+                "templates": templates,
+                "participant_id": callback.from_user.id
             },
         )
-
     else:
         if participant_answer == correct_answer.answer_text:
             print("Правильно!")
+            await distribution_dialog(dialog_manager)
         else:
             print("Не правильно")
 
@@ -71,22 +77,22 @@ async def message_handler(
 
 async def start_game(
     callback: CallbackQuery, button: Button, dialog_manager: DialogManager
-):
-    if dialog_manager.dialog_data.get("current_task") is None:
-        print(dialog_manager.current_stack())
-        templates = dialog_manager.start_data.get("templates")
-        template = templates.pop(0)
+) -> NoReturn:
+    await distribution_dialog(dialog_manager)
 
-        session = dialog_manager.middleware_data.get("session")
-        db_answer = DbAnswer()
-        answers_list = db_answer.get_answer_list_by_question(
-            template.question_id, session=session
-        )
 
-        task = Task(template=template, answers_list=answers_list)
-        dialog_manager.dialog_data["current_task"] = task
-    else:
-        task = dialog_manager.dialog_data.get("current_task")
+async def distribution_dialog(dialog_manager: DialogManager, current_task: Task | None = None, **kwargs) -> NoReturn:
+    templates = dialog_manager.start_data.get("templates")
+    template = templates.pop(0)
+    dialog_manager.dialog_data["templates"] = templates
+    session = dialog_manager.middleware_data.get("session")
+    db_answer = DbAnswer()
+    answers_list = db_answer.get_answer_list_by_question(
+        template.question_id, session=session
+    )
+
+    task = Task(template=template, answers_list=answers_list)
+    dialog_manager.dialog_data["current_task"] = task
 
     dialog_manager.show_mode = ShowMode.AUTO  # Вот эту строку нужно добавить
 

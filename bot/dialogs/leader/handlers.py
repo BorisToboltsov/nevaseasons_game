@@ -9,7 +9,7 @@ async def button_yes(
     callback: CallbackQuery, button: Button, dialog_manager: DialogManager
 ):
     bg = dialog_manager.start_data.get("bg")
-    await bg.switch_to(state=FSMStartGame.test)
+    await bg.switch_to(state=FSMStartGame.start)
     await dialog_manager.done()
 
 

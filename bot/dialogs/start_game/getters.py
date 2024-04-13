@@ -10,7 +10,7 @@ async def get_task_choice(**kwargs):
         "question_text": task.template.question.text,
         "answers_list": task.answers_list,
         "send_answer": send_answer,
-        "not_send_answer": not send_answer,
+        # "not_send_answer": not send_answer,
     }
 
 

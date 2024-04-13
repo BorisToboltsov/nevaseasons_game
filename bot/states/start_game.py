@@ -8,3 +8,4 @@ class FSMStartGame(StatesGroup):
     input_text_photo = State()
     start = State()
     wait = State()
+    end_game = State()

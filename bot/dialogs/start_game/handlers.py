@@ -71,7 +71,6 @@ async def message_handler(
     message: Message, widget: MessageInput, dialog_manager: DialogManager
 ) -> None:
     await check_answer(dialog_manager, message)
-    await dialog_manager.switch_to(state=FSMStartGame.wait)
 
     # participant_answer = message.text
 
@@ -88,7 +87,11 @@ async def start_game(
 
 async def distribution_dialog(dialog_manager: DialogManager, current_task: Task | None = None, **kwargs) -> NoReturn:
     templates = dialog_manager.start_data.get("templates")
-    template = templates.pop(0)
+    try:
+        template = templates.pop(0)
+    except IndexError:
+        await dialog_manager.switch_to(state=FSMStartGame.end_game)
+        return
     dialog_manager.dialog_data["templates"] = templates
     session = dialog_manager.middleware_data.get("session")
     db_answer = DbAnswer()
@@ -108,7 +111,6 @@ async def distribution_dialog(dialog_manager: DialogManager, current_task: Task 
         await dialog_manager.switch_to(state=FSMStartGame.input_text_photo)
 
 
-
 async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Message) -> NoReturn:
     if type(entity) == Message:
         participant_answer = entity.text
@@ -125,6 +127,8 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
     task.template.question.requires_verification = True  # TODO: Убрать!
 
     if task.template.question.requires_verification:
+        await dialog_manager.switch_to(state=FSMStartGame.wait)
+
         user_game = dialog_manager.start_data.get("game_session").user
         participant_game = dialog_manager.start_data.get("participant_game")
 

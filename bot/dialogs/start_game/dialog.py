@@ -17,8 +17,9 @@ start_game_dialog = Dialog(
     ),
     Window(
         Format("Вопрос №{number_question}\n\n", when="not_send_answer"),
-        Format("{question_text}", when="not_send_answer"),
-        Const("Ожидайте проверки ответа", when="send_answer"),
+        Format("{question_text}"),
+        # Format("{question_text}", when="not_send_answer"),
+        # Const("Ожидайте проверки ответа", when="send_answer"),
         Column(
             Select(
                 Format("{item.answer_text}"),
@@ -26,7 +27,7 @@ start_game_dialog = Dialog(
                 item_id_getter=lambda x: x.answer_text,
                 items="answers_list",
                 on_click=select_answer,
-                when="not_send_answer",
+                # when="not_send_answer",
             ),
         ),
         state=FSMStartGame.choice,
@@ -53,7 +54,11 @@ start_game_dialog = Dialog(
         getter=get_task_input,
     ),
     Window(
-        Const("Ожидайте ответа"),
+        Const("Ожидайте проверки ответа"),
         state=FSMStartGame.wait,
+    ),
+    Window(
+        Const("Конец игры"),
+        state=FSMStartGame.end_game,
     ),
 )

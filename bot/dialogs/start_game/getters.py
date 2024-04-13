@@ -1,3 +1,6 @@
+from aiogram_dialog import ShowMode
+
+
 async def get_task_choice(**kwargs):
     dialog_manager = kwargs.get("dialog_manager")
     task = dialog_manager.dialog_data.get("current_task")

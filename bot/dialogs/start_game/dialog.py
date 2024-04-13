@@ -53,8 +53,7 @@ start_game_dialog = Dialog(
         getter=get_task_input,
     ),
     Window(
-        Const("Тест"),
-        state=FSMStartGame.distribution,
-        getter=get_task_input,
+        Const("Ожидайте ответа"),
+        state=FSMStartGame.wait,
     ),
 )

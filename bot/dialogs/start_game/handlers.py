@@ -16,60 +16,65 @@ from services.task.task import Task
 async def select_answer(
     callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, item_id: str
 ):
-    participant_answer = callback.data
-    task = dialog_manager.dialog_data.get("current_task")
-    templates = dialog_manager.dialog_data.get("templates")
-    dialog_manager.dialog_data["send_answer"] = True
-    for answer in task.answers_list:
-        if answer.is_correct:
-            correct_answer = answer
-
-    participant_answer = participant_answer.split(":")[1]
-
-    task.template.question.requires_verification = True  # TODO: Убрать!
-
-    if task.template.question.requires_verification:
-        user_game = dialog_manager.start_data.get("game_session").user
-        participant_game = dialog_manager.start_data.get("participant_game")
-
-        user = User(id=user_game.telegram_id, is_bot=False, first_name="First name")
-        chat = Chat(id=user_game.telegram_id, type="private")
-        manager = BgManager(
-            user=user,
-            chat=chat,
-            bot=callback.bot,
-            router=router_onboarding,
-            intent_id=None,
-            stack_id="",
-        )
-        bg = dialog_manager.bg()
-        await manager.start(
-            FSMLeader.first,
-            mode=StartMode.NORMAL,
-            show_mode=ShowMode.EDIT,
-            data={
-                "correct_answer": correct_answer.answer_text,
-                "participant_answer": participant_answer,
-                "command_name": participant_game.command_name.name,
-                "bg": bg,
-                "dialog_manager": dialog_manager,
-                "current_task": task,
-                "templates": templates,
-                "participant_id": callback.from_user.id
-            },
-        )
-    else:
-        if participant_answer == correct_answer.answer_text:
-            print("Правильно!")
-            await distribution_dialog(dialog_manager)
-        else:
-            print("Не правильно")
+    await check_answer(dialog_manager, callback)
+    # participant_answer = callback.data
+    # task = dialog_manager.dialog_data.get("current_task")
+    # templates = dialog_manager.dialog_data.get("templates")
+    # dialog_manager.dialog_data["send_answer"] = True
+    # for answer in task.answers_list:
+    #     if answer.is_correct:
+    #         correct_answer = answer
+    #
+    # participant_answer = participant_answer.split(":")[1]
+    #
+    # task.template.question.requires_verification = True  # TODO: Убрать!
+    #
+    # if task.template.question.requires_verification:
+    #     user_game = dialog_manager.start_data.get("game_session").user
+    #     participant_game = dialog_manager.start_data.get("participant_game")
+    #
+    #     user = User(id=user_game.telegram_id, is_bot=False, first_name="First name")
+    #     chat = Chat(id=user_game.telegram_id, type="private")
+    #     manager = BgManager(
+    #         user=user,
+    #         chat=chat,
+    #         bot=callback.bot,
+    #         router=router_onboarding,
+    #         intent_id=None,
+    #         stack_id="",
+    #     )
+    #     bg = dialog_manager.bg()
+    #     await manager.start(
+    #         FSMLeader.first,
+    #         mode=StartMode.NORMAL,
+    #         show_mode=ShowMode.EDIT,
+    #         data={
+    #             "correct_answer": correct_answer.answer_text,
+    #             "participant_answer": participant_answer,
+    #             "command_name": participant_game.command_name.name,
+    #             "bg": bg,
+    #             "dialog_manager": dialog_manager,
+    #             "current_task": task,
+    #             "templates": templates,
+    #             "participant_id": callback.from_user.id
+    #         },
+    #     )
+    # else:
+    #     if participant_answer == correct_answer.answer_text:
+    #         print("Правильно!")
+    #         await distribution_dialog(dialog_manager)
+    #     else:
+    #         print("Не правильно")
 
 
 async def message_handler(
     message: Message, widget: MessageInput, dialog_manager: DialogManager
 ) -> None:
-    pass
+    await check_answer(dialog_manager, message)
+    await dialog_manager.switch_to(state=FSMStartGame.wait)
+
+    # participant_answer = message.text
+
     # if all(ch.isdigit() for ch in text) and 3 <= int(text) <= 120:
     #     return text
     # raise ValueError
@@ -90,7 +95,6 @@ async def distribution_dialog(dialog_manager: DialogManager, current_task: Task 
     answers_list = db_answer.get_answer_list_by_question(
         template.question_id, session=session
     )
-
     task = Task(template=template, answers_list=answers_list)
     dialog_manager.dialog_data["current_task"] = task
 
@@ -102,3 +106,57 @@ async def distribution_dialog(dialog_manager: DialogManager, current_task: Task 
         await dialog_manager.switch_to(state=FSMStartGame.input_text)
     elif task.template.question.type_response == 3:
         await dialog_manager.switch_to(state=FSMStartGame.input_text_photo)
+
+
+
+async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Message) -> NoReturn:
+    if type(entity) == Message:
+        participant_answer = entity.text
+    else:
+        participant_answer = entity.data
+        participant_answer = participant_answer.split(":")[1]
+    task = dialog_manager.dialog_data.get("current_task")
+    templates = dialog_manager.dialog_data.get("templates")
+    dialog_manager.dialog_data["send_answer"] = True
+    for answer in task.answers_list:
+        if answer.is_correct:
+            correct_answer = answer
+
+    task.template.question.requires_verification = True  # TODO: Убрать!
+
+    if task.template.question.requires_verification:
+        user_game = dialog_manager.start_data.get("game_session").user
+        participant_game = dialog_manager.start_data.get("participant_game")
+
+        user = User(id=user_game.telegram_id, is_bot=False, first_name="First name")
+        chat = Chat(id=user_game.telegram_id, type="private")
+        manager = BgManager(
+            user=user,
+            chat=chat,
+            bot=entity.bot,
+            router=router_onboarding,
+            intent_id=None,
+            stack_id="",
+        )
+        bg = dialog_manager.bg()
+        await manager.start(
+            FSMLeader.first,
+            mode=StartMode.NORMAL,
+            show_mode=ShowMode.EDIT,
+            data={
+                "correct_answer": correct_answer.answer_text,
+                "participant_answer": participant_answer,
+                "command_name": participant_game.command_name.name,
+                "bg": bg,
+                "dialog_manager": dialog_manager,
+                "current_task": task,
+                "templates": templates,
+                "participant_id": entity.from_user.id
+            },
+        )
+    else:
+        if participant_answer == correct_answer.answer_text:
+            print("Правильно!")
+            await distribution_dialog(dialog_manager)
+        else:
+            print("Не правильно")

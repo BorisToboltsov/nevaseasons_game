@@ -1,3 +1,4 @@
+import uuid
 from typing import NoReturn
 
 from aiogram.types import CallbackQuery, Chat, Message, User
@@ -140,12 +141,12 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
             bot=entity.bot,
             router=router_onboarding,
             intent_id=None,
-            stack_id="",
+            stack_id=f"{uuid.uuid4()}",
         )
         bg = dialog_manager.bg()
         await manager.start(
             FSMLeader.first,
-            mode=StartMode.NORMAL,
+            mode=StartMode.NEW_STACK,
             show_mode=ShowMode.EDIT,
             data={
                 "correct_answer": correct_answer.answer_text,

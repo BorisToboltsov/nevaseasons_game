@@ -9,3 +9,6 @@ class FSMStartGame(StatesGroup):
     start = State()
     wait = State()
     end_game = State()
+    choice_no_answer = State()
+    input_text_no_answer = State()
+    input_text_photo_no_answer = State()

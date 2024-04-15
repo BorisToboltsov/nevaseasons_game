@@ -61,4 +61,46 @@ start_game_dialog = Dialog(
         Const("Конец игры"),
         state=FSMStartGame.end_game,
     ),
+
+    Window(
+        Const("Не верно! Попробуйте еще раз!\n"),
+        Format("Вопрос №{number_question}\n\n", when="not_send_answer"),
+        Format("{question_text}"),
+        # Format("{question_text}", when="not_send_answer"),
+        # Const("Ожидайте проверки ответа", when="send_answer"),
+        Column(
+            Select(
+                Format("{item.answer_text}"),
+                id="answer",
+                item_id_getter=lambda x: x.answer_text,
+                items="answers_list",
+                on_click=select_answer,
+                # when="not_send_answer",
+            ),
+        ),
+        state=FSMStartGame.choice_no_answer,
+        getter=get_task_choice,
+    ),
+    Window(
+Const("Не верно! Попробуйте еще раз!\n"),
+        Format("Вопрос №{number_question}\n\n"),
+        Format("{question_text}"),
+        MessageInput(
+            func=message_handler,
+            content_types=ContentType.TEXT,
+        ),
+        state=FSMStartGame.input_text_no_answer,
+        getter=get_task_input,
+    ),
+    Window(
+        Format("Вопрос №{number_question}\n\n"),
+        Format("{question_text}"),
+        MessageInput(
+            func=message_handler,
+            content_types=ContentType.TEXT,
+        ),
+        state=FSMStartGame.input_text_photo_no_answer,
+        getter=get_task_input,
+    ),
+
 )

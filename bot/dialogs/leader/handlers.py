@@ -17,11 +17,10 @@ async def button_no(
     callback: CallbackQuery, button: Button, dialog_manager: DialogManager
 ):
     task = dialog_manager.start_data.get("current_task")
-    participant_id = dialog_manager.start_data.get("participant_id")
     dialog_manager = dialog_manager.start_data.get("bg")
     if task.template.question.type_response == 1:
-        await dialog_manager.switch_to(state=FSMStartGame.choice)
+        await dialog_manager.switch_to(state=FSMStartGame.choice_no_answer)
     elif task.template.question.type_response == 2:
-        await dialog_manager.switch_to(state=FSMStartGame.input_text)
+        await dialog_manager.switch_to(state=FSMStartGame.input_text_no_answer)
     elif task.template.question.type_response == 3:
-        await dialog_manager.switch_to(state=FSMStartGame.input_text_photo)
+        await dialog_manager.switch_to(state=FSMStartGame.input_text_photo_no_answer)

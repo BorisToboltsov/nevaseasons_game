@@ -37,6 +37,7 @@ async def distribution_dialog(dialog_manager: DialogManager, current_task: Task 
     try:
         template = templates.pop(0)
     except IndexError:
+        # Конец игры подсчет очков
         await dialog_manager.switch_to(state=FSMStartGame.end_game)
         return
     dialog_manager.dialog_data["templates"] = templates

@@ -26,7 +26,6 @@ async def get_task_choice(**kwargs):
         "send_answer": send_answer,
         "path_to_image": path_to_image,
         "image": image
-        # "not_send_answer": not send_answer,
     }
 
 

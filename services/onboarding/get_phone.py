@@ -5,11 +5,13 @@ from sqlalchemy.orm import Session
 
 from bot.states.onboarding import FSMOnboarding
 from database.user.crud.user import DbUser
-from view.onboarding import not_register, connect_success
+from view.onboarding import connect_success, not_register
 
 
 class GetPhone:
-    def __init__(self, message: Message, session: Session, dialog_manager: DialogManager):
+    def __init__(
+        self, message: Message, session: Session, dialog_manager: DialogManager
+    ):
         self.message = message
         self.session = session
         self.dialog_manager = dialog_manager
@@ -18,12 +20,18 @@ class GetPhone:
         contact = self.message.contact
         db_user = DbUser()
         await self.message.delete()  # Управление последнего сообщения
-        await self.message.bot.delete_message(chat_id=self.message.chat.id, message_id=self.message.message_id - 1)  # Удаление предпоследнего сообщени
+        await self.message.bot.delete_message(
+            chat_id=self.message.chat.id, message_id=self.message.message_id - 1
+        )  # Удаление предпоследнего сообщени
         try:
             user = db_user.get_user_by_phone(contact.phone_number, self.session)
             user.telegram_id = self.message.from_user.id
             self.session.commit()
             await connect_success(self.message)
-            await self.dialog_manager.start(state=FSMOnboarding.first, mode=StartMode.RESET_STACK, data={'user': user})
+            await self.dialog_manager.start(
+                state=FSMOnboarding.first,
+                mode=StartMode.RESET_STACK,
+                data={"user": user},
+            )
         except NoResultFound:
             await not_register(self.message)

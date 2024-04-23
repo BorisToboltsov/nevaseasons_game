@@ -4,14 +4,15 @@ from sqlalchemy.orm import sessionmaker
 
 
 class Database:
-    def __init__(self,
-                 driver_name: str,
-                 host: int,
-                 username: str,
-                 password: str,
-                 database: str,
-                 query: dict
-                 ):
+    def __init__(
+        self,
+        driver_name: str,
+        host: int,
+        username: str,
+        password: str,
+        database: str,
+        query: dict,
+    ):
 
         self.driver_name = driver_name
         self.host = host
@@ -30,9 +31,11 @@ class Database:
 def load_database(path: str | None = None) -> Database:
     env = Env()
     env.read_env(path)
-    return Database(driver_name=env('DRIVER_NAME'),
-                    host=env('HOST'),
-                    username=env('USER_NAME'),
-                    password=env('PASSWORD'),
-                    database=env('DATABASE'),
-                    query={})
+    return Database(
+        driver_name=env("DRIVER_NAME"),
+        host=env("HOST"),
+        username=env("USER_NAME"),
+        password=env("PASSWORD"),
+        database=env("DATABASE"),
+        query={},
+    )

@@ -3,14 +3,22 @@ from typing import Type
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from database.participant.models.participant import Participant, CommandName, ParticipantGame
+from database.participant.models.participant import (
+    CommandName,
+    Participant,
+    ParticipantGame,
+)
 
 
 class DbParticipant:
 
     @staticmethod
     def get_user_by_telegram(telegram_id: int, session: Session) -> Type[Participant]:
-        return session.query(Participant).filter(Participant.telegram_id == telegram_id).one()
+        return (
+            session.query(Participant)
+            .filter(Participant.telegram_id == telegram_id)
+            .one()
+        )
 
 
 class DbCommandName:
@@ -23,12 +31,24 @@ class DbCommandName:
 class DbParticipantGame:
 
     @staticmethod
-    def get_participant_game_by_gs_p(game_session_id: int,
-                                     participant_id: int,
-                                     session: Session) -> list[Type[ParticipantGame]]:
-        return session.query(ParticipantGame).filter(ParticipantGame.game_session_id == game_session_id,
-                                                     ParticipantGame.participant_id == participant_id).all()
+    def get_participant_game_by_gs_p(
+        game_session_id: int, participant_id: int, session: Session
+    ) -> list[Type[ParticipantGame]]:
+        return (
+            session.query(ParticipantGame)
+            .filter(
+                ParticipantGame.game_session_id == game_session_id,
+                ParticipantGame.participant_id == participant_id,
+            )
+            .all()
+        )
 
     @staticmethod
-    def get_all_participant_game_by_game_session(game_session_id: int, session: Session) -> list[Type[ParticipantGame]]:
-        return session.query(ParticipantGame).filter(ParticipantGame.game_session_id == game_session_id).all()
+    def get_all_participant_game_by_game_session(
+        game_session_id: int, session: Session
+    ) -> list[Type[ParticipantGame]]:
+        return (
+            session.query(ParticipantGame)
+            .filter(ParticipantGame.game_session_id == game_session_id)
+            .all()
+        )

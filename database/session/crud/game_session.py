@@ -12,7 +12,7 @@ class DbGameSession:
         game_session_id: int, session: Session
     ) -> Type[GameSession]:
         return (
-            session.query(GameSession).filter(GameSession.id == game_session_id).one()
+            session.query(GameSession).filter(GameSession.id == game_session_id, GameSession.is_active.is_(True)).one()
         )
 
     @staticmethod

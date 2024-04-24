@@ -40,7 +40,7 @@ class DbParticipantGame:
                 ParticipantGame.game_session_id == game_session_id,
                 ParticipantGame.participant_id == participant_id,
             )
-            .all()
+            .one()
         )
 
     @staticmethod
@@ -50,5 +50,15 @@ class DbParticipantGame:
         return (
             session.query(ParticipantGame)
             .filter(ParticipantGame.game_session_id == game_session_id)
+            .all()
+        )
+
+    @staticmethod
+    def get_all_participant_game_complete(
+        game_session_id: int, session: Session
+    ) -> list[Type[ParticipantGame]]:
+        return (
+            session.query(ParticipantGame)
+            .filter(ParticipantGame.game_session_id == game_session_id, ParticipantGame.is_active.is_(False))
             .all()
         )

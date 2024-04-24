@@ -10,8 +10,11 @@ from aiogram_dialog.widgets.kbd import Button
 from bot.handlers.onboarding import router_onboarding
 from bot.states.leader import FSMLeader
 from bot.states.start_game import FSMStartGame
+from database.participant.crud.participant import DbParticipant, DbParticipantGame
+from database.session.crud.game_session import DbGameSession
 from database.task.crud.answers import DbAnswer
 from services.task.task import Task
+from view.end_game import command_end_game, all_commands_end_game, command_win
 
 
 async def select_answer(
@@ -29,15 +32,54 @@ async def message_handler(
 async def start_game(
     callback: CallbackQuery, button: Button, dialog_manager: DialogManager
 ) -> NoReturn:
-    await distribution_dialog(dialog_manager)
+    await distribution_dialog(dialog_manager, callback)
 
 
-async def distribution_dialog(dialog_manager: DialogManager, current_task: Task | None = None, **kwargs) -> NoReturn:
+async def distribution_dialog(dialog_manager: DialogManager, callback: CallbackQuery) -> NoReturn:
     templates = dialog_manager.start_data.get("templates")
     try:
         template = templates.pop(0)
     except IndexError:
         # Конец игры подсчет очков
+        session = dialog_manager.middleware_data.get("session")
+        game_session = dialog_manager.start_data.get('game_session')
+        db_participant = DbParticipant()
+        participant = db_participant.get_user_by_telegram(
+            session=session, telegram_id=callback.from_user.id
+        )
+
+        db_participant_game = DbParticipantGame()
+        participant_game = db_participant_game.get_participant_game_by_gs_p(
+            session=session,
+            game_session_id=game_session.id,
+            participant_id=participant.id,
+            )
+        participant_game.is_active = False
+        participant_game_complete = (
+            db_participant_game.get_all_participant_game_complete(
+                session=session, game_session_id=game_session.id
+            )
+        )
+        # participant_game_complete_count = len(participant_game_complete) + 1  # Делаем выборку из закончивших команд, +1 т.к. результат текущей команды не сохранен
+        if len(participant_game_complete) == 1:
+            # Если команда закончила 1, она победитель.
+            await command_win(callback, game_session.user.telegram_id,
+                                   participant_game.command_name.name,
+                                   len(participant_game_complete),
+                                   game_session.number_participants)
+        elif len(participant_game_complete) != game_session.number_participants:
+            await command_end_game(callback, game_session.user.telegram_id,
+                                   participant_game.command_name.name,
+                                   len(participant_game_complete),
+                                   game_session.number_participants)
+        else:
+            # Все команды закончили игру
+            db_game_session = DbGameSession()
+            current_game_session = db_game_session.get_game_session_by_id(game_session_id=game_session.id, session=session)
+            current_game_session.is_finished = True
+            current_game_session.is_active = False
+            await all_commands_end_game(callback, game_session.user.telegram_id, participant_game.command_name.name)
+        session.commit()
         await dialog_manager.switch_to(state=FSMStartGame.end_game)
         return
     dialog_manager.dialog_data["templates"] = templates

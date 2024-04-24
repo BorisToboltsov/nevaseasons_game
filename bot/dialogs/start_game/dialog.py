@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from bot.dialogs.start_game.getters import get_task_choice, get_task_input, get_start_message
-from bot.dialogs.start_game.handlers import message_handler, select_answer, start_game
+from bot.dialogs.start_game.handlers import message_handler, select_answer, start_game, input_photo
 from bot.states.start_game import FSMStartGame
 
 start_game_dialog = Dialog(
@@ -48,8 +48,8 @@ start_game_dialog = Dialog(
         Format("Вопрос №{number_question}\n\n"),
         Format("{question_text}"),
         MessageInput(
-            func=message_handler,
-            content_types=ContentType.TEXT,
+            func=input_photo,
+            content_types=ContentType.PHOTO,
         ),
         state=FSMStartGame.input_text_photo,
         getter=get_task_input,
@@ -94,14 +94,23 @@ start_game_dialog = Dialog(
     ),
     Window(
         DynamicMedia("image", when="path_to_image"),
+        Const("Не верно! Попробуйте еще раз!\n"),
         Format("Вопрос №{number_question}\n\n"),
         Format("{question_text}"),
+        MessageInput(
+            func=input_photo,
+            content_types=ContentType.PHOTO,
+        ),
+        state=FSMStartGame.input_text_photo_no_answer,
+        getter=get_task_input,
+    ),
+    Window(
+        Format("Отправьте ответ\n"),
         MessageInput(
             func=message_handler,
             content_types=ContentType.TEXT,
         ),
-        state=FSMStartGame.input_text_photo_no_answer,
-        getter=get_task_input,
+        state=FSMStartGame.wait_answer,
     ),
 
 )

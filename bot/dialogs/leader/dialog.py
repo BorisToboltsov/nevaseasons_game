@@ -1,5 +1,6 @@
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Button
+from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from bot.dialogs.leader.getters import get_text
@@ -8,6 +9,7 @@ from bot.states.leader import FSMLeader
 
 leader_dialog = Dialog(
     Window(
+DynamicMedia("photo", when="photo"),
         Format(
             "Команда {command_name}:\nОтвет команды: {participant_answer}\nПравильный ответ: {correct_answer}"
         ),

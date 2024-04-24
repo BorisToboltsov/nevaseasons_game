@@ -79,6 +79,7 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
 
         user_game = dialog_manager.start_data.get("game_session").user
         participant_game = dialog_manager.start_data.get("participant_game")
+        photo_id = dialog_manager.dialog_data.get("photo_id")
 
         user = User(id=user_game.telegram_id, is_bot=False, first_name="First name")
         chat = Chat(id=user_game.telegram_id, type="private")
@@ -101,6 +102,8 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
                 "command_name": participant_game.command_name.name,
                 "bg": bg,
                 "current_task": task,
+                "photo_id": photo_id,
+                "task": task,
             },
         )
     else:
@@ -115,3 +118,16 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
                 await dialog_manager.switch_to(state=FSMStartGame.input_text_no_answer)
             elif task.template.question.type_response == 3:
                 await dialog_manager.switch_to(state=FSMStartGame.input_text_photo_no_answer)
+
+
+async def taking_photo(
+    message: Message, dialog_manager: DialogManager
+) -> None:
+    dialog_manager.dialog_data['photo_id'] = message.photo[-1].file_id
+    await dialog_manager.switch_to(state=FSMStartGame.wait_answer)
+
+
+async def input_photo(
+    message: Message, widget: MessageInput, dialog_manager: DialogManager
+) -> None:
+    await taking_photo(message, dialog_manager)

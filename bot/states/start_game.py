@@ -12,3 +12,4 @@ class FSMStartGame(StatesGroup):
     choice_no_answer = State()
     input_text_no_answer = State()
     input_text_photo_no_answer = State()
+    wait_answer = State()

@@ -61,20 +61,20 @@ async def distribution_dialog(dialog_manager: DialogManager, current_task: Task 
 
 async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Message) -> NoReturn:
     if type(entity) == Message:
-        participant_answer = entity.text
+        participant_answer = entity.text.lower()
     else:
         participant_answer = entity.data
-        participant_answer = participant_answer.split(":")[1]
+        participant_answer = participant_answer.split(":")[1].lower()
     task = dialog_manager.dialog_data.get("current_task")
-    templates = dialog_manager.dialog_data.get("templates")
     dialog_manager.dialog_data["send_answer"] = True
     for answer in task.answers_list:
         if answer.is_correct:
-            correct_answer = answer
+            correct_answer = answer.answer_text.lower()
 
     # task.template.question.requires_verification = True  # TODO: Убрать!
 
     if task.template.question.requires_verification:
+        # Если вопрос требует верификации у гида
         await dialog_manager.switch_to(state=FSMStartGame.wait)
 
         user_game = dialog_manager.start_data.get("game_session").user
@@ -96,18 +96,15 @@ async def check_answer(dialog_manager: DialogManager, entity: CallbackQuery | Me
             mode=StartMode.NEW_STACK,
             show_mode=ShowMode.EDIT,
             data={
-                "correct_answer": correct_answer.answer_text,
+                "correct_answer": correct_answer,
                 "participant_answer": participant_answer,
                 "command_name": participant_game.command_name.name,
                 "bg": bg,
-                "dialog_manager": dialog_manager,
                 "current_task": task,
-                "templates": templates,
-                "participant_id": entity.from_user.id
             },
         )
     else:
-        if participant_answer == correct_answer.answer_text:
+        if participant_answer == correct_answer:
             # Правильный ответ
             await dialog_manager.switch_to(state=FSMStartGame.start)
         else:

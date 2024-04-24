@@ -9,7 +9,7 @@ from bot.states.leader import FSMLeader
 leader_dialog = Dialog(
     Window(
         Format(
-            "Команда {command_name}:\nОтвет команды {participant_answer}\nПравильный ответ{correct_answer}"
+            "Команда {command_name}:\nОтвет команды: {participant_answer}\nПравильный ответ: {correct_answer}"
         ),
         Button(text=Const("Да"), id="yes", on_click=button_yes),
         Button(text=Const("Нет"), id="no", on_click=button_no),
